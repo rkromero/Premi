@@ -1,0 +1,149 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Familia {
+  id                String   @id @default(cuid())
+  nombre            String
+  codigoInvitacion  String   @unique
+  createdAt         DateTime @default(now())
+  
+  // Relaciones
+  usuarios          Usuario[]
+  
+  @@map("familias")
+}
+
+model Usuario {
+  id           String   @id @default(cuid())
+  nombre       String
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  rol          Rol
+  familiaId    String?  @map("familia_id")
+  avatarUrl    String?  @map("avatar_url")
+  puntos       Int      @default(0)
+  createdAt    DateTime @default(now())
+  
+  // Relaciones
+  familia              Familia?        @relation(fields: [familiaId], references: [id])
+  tareasAsignadas      Tarea[]         @relation("TareasAsignadas")
+  tareasCreadas        Tarea[]         @relation("TareasCreadas")
+  recompensasCreadas   Recompensa[]    @relation("RecompensasCreadas")
+  canjes               Canje[]
+  canjesAprobados      Canje[]         @relation("CanjesAprobados")
+  notificaciones       Notificacion[]
+  
+  @@map("usuarios")
+}
+
+model Tarea {
+  id            String      @id @default(cuid())
+  titulo        String
+  descripcion   String?
+  puntos        Int
+  asignadoA     String?     @map("asignado_a")
+  creadaPor     String      @map("creada_por")
+  estado        EstadoTarea @default(activa)
+  fechaLimite   DateTime?   @map("fecha_limite")
+  createdAt     DateTime    @default(now())
+  
+  // Relaciones
+  usuarioAsignado Usuario? @relation("TareasAsignadas", fields: [asignadoA], references: [id])
+  usuarioCreador  Usuario  @relation("TareasCreadas", fields: [creadaPor], references: [id])
+  
+  @@map("tareas")
+}
+
+model Recompensa {
+  id           String            @id @default(cuid())
+  nombre       String
+  descripcion  String?
+  costoPuntos  Int               @map("costo_puntos")
+  estado       EstadoRecompensa  @default(disponible)
+  creadaPor    String            @map("creada_por")
+  createdAt    DateTime          @default(now())
+  
+  // Relaciones
+  usuarioCreador Usuario @relation("RecompensasCreadas", fields: [creadaPor], references: [id])
+  canjes         Canje[]
+  
+  @@map("recompensas")
+}
+
+model Canje {
+  id           String      @id @default(cuid())
+  recompensaId String      @map("recompensa_id")
+  usuarioId    String      @map("usuario_id")
+  estado       EstadoCanje @default(pendiente)
+  aprobadoPor  String?     @map("aprobado_por")
+  createdAt    DateTime    @default(now())
+  
+  // Relaciones
+  recompensa       Recompensa @relation(fields: [recompensaId], references: [id])
+  usuario          Usuario    @relation(fields: [usuarioId], references: [id])
+  usuarioAprobador Usuario?   @relation("CanjesAprobados", fields: [aprobadoPor], references: [id])
+  
+  @@map("canjes")
+}
+
+model Notificacion {
+  id        String              @id @default(cuid())
+  usuarioId String              @map("usuario_id")
+  tipo      TipoNotificacion
+  mensaje   String
+  leido     Boolean             @default(false)
+  createdAt DateTime            @default(now())
+  
+  // Relaciones
+  usuario Usuario @relation(fields: [usuarioId], references: [id])
+  
+  @@map("notificaciones")
+}
+
+// Enums
+enum Rol {
+  padre
+  hijo
+}
+
+enum EstadoTarea {
+  activa
+  pendiente_aprobacion
+  aprobada
+  rechazada
+}
+
+enum EstadoRecompensa {
+  disponible
+  reclamada
+}
+
+enum EstadoCanje {
+  pendiente
+  aprobado
+  rechazado
+}
+
+enum TipoNotificacion {
+  tarea_completada
+  tarea_aprobada
+  tarea_rechazada
+  canje_solicitado
+  canje_aprobado
+  canje_rechazado
+  nueva_tarea
+  nueva_recompensa
+}
