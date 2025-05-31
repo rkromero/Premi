@@ -12,17 +12,24 @@ app.use(cors({
 
 app.use(express.json());
 
+// Ruta para favicon (evitar error 404)
+app.get('/favicon.ico', (req, res) => {
+  res.status(204).end();
+});
+
 // Ruta raíz
 app.get('/', (req, res) => {
   res.json({
     success: true,
     message: 'Premi Family App API',
     version: '1.0.0',
+    status: 'Running on Railway',
     endpoints: {
       health: '/health',
       test: '/api/test',
       login: '/api/auth/login'
-    }
+    },
+    backend_url: 'https://surprising-wisdom-production.up.railway.app'
   });
 });
 
