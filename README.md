@@ -1,90 +1,237 @@
-# 🏠 Premi - Aplicación Familiar de Tareas Gamificada
+# 📱 App Móvil - Gestión Familiar de Tareas
 
-Una aplicación completa para la gestión gamificada de tareas familiares que permite a padres e hijos colaborar de manera divertida y organizada.
+Aplicación móvil desarrollada en React Native con Expo para la gestión gamificada de tareas familiares.
 
-## 📱 Componentes del Proyecto
+## 🚀 Características
 
-### Backend API
-- **Tecnología:** Node.js + Express + PostgreSQL + Prisma
-- **Ubicación:** `/backend`
-- **Características:**
-  - API REST completa
-  - Autenticación JWT
-  - Base de datos PostgreSQL con Prisma ORM
-  - Sistema de roles (padres/hijos)
-  - Gestión de tareas, recompensas y puntos
-  - Notificaciones en tiempo real
+- **Autenticación** con JWT
+- **Interfaz moderna** con React Native Paper
+- **Gestión de estado** con Zustand
+- **Navegación** con React Navigation
+- **Tipado fuerte** con TypeScript
+- **Componentes reutilizables**
+- **Tema personalizado** familiar-friendly
 
-### Aplicación Móvil
-- **Tecnología:** React Native + Expo + TypeScript
-- **Ubicación:** `/mobile-app`
-- **Características:**
-  - Interfaz moderna y amigable
-  - Gestión de estado con Zustand
-  - Navegación con React Navigation
-  - Diseño responsivo con React Native Paper
-  - Integración completa con la API
+## 🛠️ Stack Tecnológico
+
+- **React Native** + **Expo**
+- **TypeScript** para tipado
+- **React Navigation** para navegación
+- **Zustand** para manejo de estado
+- **React Native Paper** para UI
+- **Axios** para peticiones HTTP
+- **AsyncStorage** para persistencia local
+
+## �� Instalación
+
+1. **Instalar dependencias**
+```bash
+npm install
+```
+
+2. **Iniciar el servidor de desarrollo**
+```bash
+npm start
+```
+
+3. **Ejecutar en dispositivo**
+```bash
+# Android
+npm run android
+
+# iOS (requiere macOS)
+npm run ios
+
+# Web
+npm run web
+```
+
+## 📱 Configuración del Backend
+
+La aplicación se conecta automáticamente al backend según el entorno:
+
+- **Desarrollo**: `http://10.0.2.2:3000/api` (Android Emulator)
+- **Producción**: `https://surprising-wisdom-production.up.railway.app/api`
+
+Para desarrollo local, asegúrate de que el backend esté ejecutándose en el puerto 3000.
+
+## 🏗️ Estructura del Proyecto
+
+```
+src/
+├── components/          # Componentes reutilizables
+│   ├── Button.tsx      # Botón personalizado
+│   ├── Input.tsx       # Input personalizado
+│   └── ...
+├── screens/            # Pantallas de la aplicación
+│   ├── auth/          # Pantallas de autenticación
+│   │   └── LoginScreen.tsx
+│   └── ...
+├── navigation/         # Configuración de navegación
+│   └── AppNavigator.tsx
+├── services/          # Servicios (API, etc.)
+│   └── api.ts         # Cliente API con Axios
+├── store/             # Stores de Zustand
+│   ├── authStore.ts   # Store de autenticación
+│   ├── taskStore.ts   # Store de tareas
+│   └── index.ts       # Exports centralizados
+├── types/             # Tipos TypeScript
+│   └── index.ts       # Todas las interfaces
+├── utils/             # Utilidades
+│   └── theme.ts       # Tema y constantes de diseño
+└── hooks/             # Custom hooks (por implementar)
+```
+
+## 🎨 Tema y Diseño
+
+### Colores Principales
+- **Primario**: `#6366F1` (Indigo) - Para acciones principales
+- **Secundario**: `#F59E0B` (Dorado) - Para puntos y recompensas
+- **Éxito**: `#10B981` (Verde) - Para tareas completadas
+- **Error**: `#EF4444` (Rojo) - Para errores
+
+### Colores por Rol
+- **Padre**: `#8B5CF6` (Púrpura)
+- **Hijo**: `#06B6D4` (Cyan)
+
+### Estados de Tareas
+- **Activa**: `#3B82F6` (Azul)
+- **Pendiente**: `#F59E0B` (Amarillo)
+- **Aprobada**: `#10B981` (Verde)
+- **Rechazada**: `#EF4444` (Rojo)
+
+## 🔧 Componentes Disponibles
+
+### Button
+```tsx
+<Button
+  title="Iniciar Sesión"
+  onPress={handleLogin}
+  variant="primary"
+  size="medium"
+  loading={isLoading}
+/>
+```
+
+### Input
+```tsx
+<Input
+  label="Email"
+  placeholder="tu@email.com"
+  value={email}
+  onChangeText={setEmail}
+  keyboardType="email-address"
+  leftIcon="mail"
+  error={emailError}
+/>
+```
+
+## 📊 Stores (Zustand)
+
+### AuthStore
+```tsx
+const { user, isAuthenticated, login, logout } = useAuthStore();
+```
+
+### TaskStore
+```tsx
+const { tasks, loading, fetchTasks, createTask } = useTaskStore();
+```
+
+### Custom Hooks
+```tsx
+const { user, isAuthenticated } = useCurrentUser();
+const isParent = useIsParent();
+const isChild = useIsChild();
+```
+
+## 🔗 API Integration
+
+El servicio API (`src/services/api.ts`) maneja:
+
+- **Autenticación automática** con tokens JWT
+- **Interceptores** para agregar headers
+- **Manejo de errores** centralizado
+- **Tipado completo** con TypeScript
+
+Ejemplo de uso:
+```tsx
+import apiService from '../services/api';
+
+// Login
+const response = await apiService.login({ email, password });
+
+// Obtener tareas
+const tasks = await apiService.getTasks();
+```
 
 ## 🚀 Despliegue
 
-### Backend en Railway
-1. El backend está configurado para desplegarse automáticamente en Railway
-2. Variables de entorno necesarias:
-   - `DATABASE_URL`: URL de PostgreSQL
-   - `JWT_SECRET`: Clave secreta para JWT
-   - `PORT`: Puerto del servidor (Railway lo asigna automáticamente)
+### Expo Go (Desarrollo)
+1. Descargar **Expo Go** en tu dispositivo
+2. Escanear el QR code generado por `npm start`
 
-### Aplicación Móvil
-- Desarrollo: Expo Go para testing
-- Producción: Build para App Store/Google Play
-
-## 📖 Documentación
-
-Consulta la documentación completa en cada directorio:
-- [Backend API Documentation](./backend/README.md)
-- [Mobile App Documentation](./mobile-app/README.md)
-
-## 🛠️ Instalación Rápida
-
-### Clonar el repositorio
+### Build de Producción
 ```bash
-git clone <tu-repo-url>
-cd Premi
+# Android APK
+expo build:android
+
+# iOS (requiere cuenta de desarrollador)
+expo build:ios
 ```
 
-### Backend
+### Expo Application Services (EAS)
 ```bash
-cd backend
-npm install
-cp .env.example .env
-# Configurar variables de entorno
-npm run prisma:migrate
-npm start
+# Instalar EAS CLI
+npm install -g @expo/eas-cli
+
+# Configurar
+eas build:configure
+
+# Build
+eas build --platform android
 ```
 
-### Mobile App
+## 🧪 Testing
+
 ```bash
-cd mobile-app
-npm install
-npm start
+# Ejecutar tests (por implementar)
+npm test
+
+# Type checking
+npx tsc --noEmit
 ```
 
-## 🌟 Características Principales
+## 📝 Próximas Funcionalidades
 
-- **Gamificación:** Sistema de puntos y recompensas
-- **Roles diferenciados:** Padres pueden crear tareas, hijos pueden completarlas
-- **Interfaz intuitiva:** Diseño moderno y fácil de usar
-- **Tiempo real:** Notificaciones instantáneas
-- **Seguridad:** Autenticación JWT y validación de datos
+- [ ] **Pantalla de Registro**
+- [ ] **Dashboard principal**
+- [ ] **Lista de tareas**
+- [ ] **Gestión de recompensas**
+- [ ] **Perfil de usuario**
+- [ ] **Notificaciones push**
+- [ ] **Modo offline**
+- [ ] **Animaciones**
 
-## 🤝 Contribuir
+## 🤝 Desarrollo
 
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/nueva-funcionalidad`)
-3. Commit tus cambios (`git commit -m 'Agregar nueva funcionalidad'`)
-4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
-5. Abre un Pull Request
+### Scripts Disponibles
+```json
+{
+  "start": "expo start",
+  "android": "expo start --android",
+  "ios": "expo start --ios", 
+  "web": "expo start --web"
+}
+```
+
+### Configuración VS Code
+Extensiones recomendadas:
+- ES7+ React/Redux/React-Native snippets
+- TypeScript Importer
+- Expo Tools
+- React Native Tools
 
 ## 📄 Licencia
 
-Este proyecto está bajo la licencia MIT. Ver el archivo [LICENSE](LICENSE) para más detalles. 
+MIT License - ver archivo LICENSE para detalles. 
