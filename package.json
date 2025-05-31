@@ -1,0 +1,19 @@
+{
+  "name": "premi-family-app",
+  "version": "1.0.0",
+  "description": "Family task management app with gamification",
+  "main": "mobile-app/App.tsx",
+  "scripts": {
+    "start": "cd mobile-app && npm start",
+    "android": "cd mobile-app && npm run android",
+    "ios": "cd mobile-app && npm run ios",
+    "web": "cd mobile-app && npm run web"
+  },
+  "keywords": ["family", "tasks", "gamification", "react-native", "expo"],
+  "author": "rkromero",
+  "license": "MIT",
+  "workspaces": [
+    "mobile-app",
+    "backend"
+  ]
+} 
