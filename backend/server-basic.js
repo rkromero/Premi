@@ -12,6 +12,20 @@ app.use(cors({
 
 app.use(express.json());
 
+// Ruta raíz
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Premi Family App API',
+    version: '1.0.0',
+    endpoints: {
+      health: '/health',
+      test: '/api/test',
+      login: '/api/auth/login'
+    }
+  });
+});
+
 // Ruta de prueba
 app.get('/health', (req, res) => {
   res.json({
